@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav>
+  <a href="/">Home</a>
+  <a href="customer.html">Customer</a>
+  <a href="provider.html">Provider</a>
+  <a href="admin.html">Admin</a>
+</nav>
+
+<div class="container">
+  <h2>Admin / Ops Panel</h2>
+
+  <input id="id" placeholder="Booking ID" />
+  <select id="status">
+    <option>PENDING</option>
+    <option>ASSIGNED</option>
+    <option>IN_PROGRESS</option>
+    <option>COMPLETED</option>
+    <option>CANCELLED</option>
+  </select>
+
+  <button onclick="override()">Override</button>
+  <button onclick="view()">View All</button>
+  <pre id="out"></pre>
+</div>
+
+<script>
+async function override() {
+  const id = document.getElementById("id").value;
+  const status = document.getElementById("status").value;
+  await fetch(`/bookings/${id}/admin`, {
+    method:"POST",
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({status})
+  });
+  view();
+}
+async function view() {
+  const r = await fetch("/bookings");
+  document.getElementById("out").innerText =
+    JSON.stringify(await r.json(), null, 2);
+}
+</script>
+
+</body>
+</html>

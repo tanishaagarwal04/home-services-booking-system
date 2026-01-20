@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Customer</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav>
+  <a href="/">Home</a>
+  <a href="customer.html">Customer</a>
+  <a href="provider.html">Provider</a>
+  <a href="admin.html">Admin</a>
+</nav>
+
+<div class="container">
+  <h2>Create Booking</h2>
+  <button onclick="create()">Create Booking</button>
+  <button onclick="assign()">Assign Provider</button>
+  <button class="danger" onclick="cancel()">Cancel</button>
+  <pre id="out"></pre>
+</div>
+
+<script>
+let id;
+async function create() {
+  const r = await fetch("/bookings", {method:"POST"});
+  const d = await r.json();
+  id = d.id;
+  load();
+}
+async function assign() {
+  await fetch(`/bookings/${id}/assign`, {method:"POST"});
+  load();
+}
+async function cancel() {
+  await fetch(`/bookings/${id}/cancel`, {method:"POST"});
+  load();
+}
+async function load() {
+  const r = await fetch("/bookings");
+  document.getElementById("out").innerText =
+    JSON.stringify(await r.json(), null, 2);
+}
+</script>
+
+</body>
+</html>

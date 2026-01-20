@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Provider</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav>
+  <a href="/">Home</a>
+  <a href="customer.html">Customer</a>
+  <a href="provider.html">Provider</a>
+  <a href="admin.html">Admin</a>
+</nav>
+
+<div class="container">
+  <h2>Provider Panel</h2>
+  <button onclick="view()">View Assigned</button>
+  <button onclick="accept()">Accept</button>
+  <button class="danger" onclick="reject()">Reject</button>
+  <pre id="out"></pre>
+</div>
+
+<script>
+let id;
+async function view() {
+  const r = await fetch("/provider/bookings");
+  const d = await r.json();
+  if (d.length) id = d[0].id;
+  document.getElementById("out").innerText =
+    JSON.stringify(d, null, 2);
+}
+async function accept() {
+  await fetch(`/bookings/${id}/provider/accept`, {method:"POST"});
+  view();
+}
+async function reject() {
+  await fetch(`/bookings/${id}/provider/reject`, {method:"POST"});
+  view();
+}
+</script>
+
+</body>
+</html>
